@@ -1,20 +1,41 @@
 #include <program/console.hpp>
-#include <program/application.hpp>
 
+#include <cam/avec.hpp>
+#include <cam/fvec.hpp>
+
+#include <algorithm>
 #include <cstdlib>
+#include <cstdint>
 #include <iostream>
-#include <stdexcept>
+#include <map>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
+namespace py {
+	template<typename... Args>
+	void run(const std::string &src_fp, Args... args) {
+		std::string command = "python -u ../src/" + src_fp;
+
+		auto add_arg = [&command](const auto &arg) {
+			std::stringstream ss;
+			ss << arg;
+			command += ' ' + std::regex_replace(ss.str(), std::regex(" "), "\\\\s");
+		};
+
+		(add_arg(args), ...);
+
+		system(command.c_str());
+	}
+}
 
 int main() {
-    cmd::clear();
+	cmd::clear();
 
-    try {
-        run();
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << '\n';
-        return EXIT_FAILURE;
-    }
+	py::run("main.py", "ask indset");
 
-    return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
