@@ -34,8 +34,8 @@ namespace py {
 
 int main() {
 	cmd::clear();
-
-	py::run("main.py", "ask indset");
+	
+	py::run("py/app.py");
 
 	return EXIT_SUCCESS;
 }
